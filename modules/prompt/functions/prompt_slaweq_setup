@@ -1,0 +1,79 @@
+#
+# A single line theme with Git information on the left and Ruby on the right.
+#
+# Authors:
+#   Steve Losh <steve@stevelosh.com>
+#   Bart Trojanowski <bart@jukie.net>
+#   Brian Carper <brian@carper.ca>
+#   steeef <steeef@gmail.com>
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#   Yan Pritzker <yan@pritzker.ws>
+#   Slawek Kaplonski <slawek@kaplonski.pl>
+#
+#
+
+function prompt_slaweq_precmd {
+  # Get Git repository information.
+  if (( $+functions[git-info] )); then
+    git-info
+  fi
+}
+
+function prompt_slaweq_setup {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+  prompt_opts=(cr percent sp subst)
+
+  # Load required functions.
+  autoload -Uz add-zsh-hook
+
+  # Add hook to set up prompt parameters before each command.
+  add-zsh-hook precmd prompt_slaweq_precmd
+
+  # Use extended color pallete if available.
+  if [[ $TERM = *256color* || $TERM = *rxvt* ]]; then
+    _prompt_slaweq_colors=(
+      "%F{81}"  # Turquoise
+      "%F{166}" # Orange
+      "%F{135}" # Purple
+      "%F{161}" # Hotpink
+      "%F{118}" # Limegreen
+      "%F{117}" # Light blue
+	  "%F{160}" # red
+    )
+  else
+    _prompt_slaweq_colors=(
+      "%F{cyan}"
+      "%F{yellow}"
+      "%F{magenta}"
+      "%F{red}"
+      "%F{green}"
+      "%F{bright_blue}"
+	  "%F{red}"
+    )
+  fi
+
+  # Set git-info parameters.
+  zstyle ':prezto:module:git:info' verbose 'yes'
+
+  zstyle ':prezto:module:git:info:action' format '! %s'
+  zstyle ':prezto:module:git:info:added' format '${_prompt_slaweq_colors[5]}✚%f'
+  zstyle ':prezto:module:git:info:ahead' format '${_prompt_slaweq_colors[7]}⬆%f'
+  zstyle ':prezto:module:git:info:behind' format '${_prompt_slaweq_colors[7]}⬇%f'
+  zstyle ':prezto:module:git:info:branch' format '${_prompt_slaweq_colors[1]}⭠ %b %f'
+  zstyle ':prezto:module:git:info:commit' format '➦ %.7c'
+  zstyle ':prezto:module:git:info:deleted' format '${_prompt_slaweq_colors[2]}✖%f'
+  zstyle ':prezto:module:git:info:modified' format '${_prompt_slaweq_colors[4]}✱%f'
+  zstyle ':prezto:module:git:info:position' format '%p'
+  zstyle ':prezto:module:git:info:renamed' format '${_prompt_slaweq_colors[4]}➙%f'
+  zstyle ':prezto:module:git:info:stashed' format '${_prompt_slaweq_colors[2]}s%f'
+  zstyle ':prezto:module:git:info:unmerged' format '${_prompt_slaweq_colors[3]}═%f'
+  zstyle ':prezto:module:git:info:untracked' format '${_prompt_slaweq_colors[3]}?%f'
+  zstyle ':prezto:module:git:info:keys' format 'prompt' '(%b%d%a%m%u)'
+
+  # Define prompts.
+  PROMPT="${_prompt_slaweq_colors[6]}[%D{%H:%M:%S}] ${_prompt_slaweq_colors[3]}%n%f@${_prompt_slaweq_colors[2]}%m%f ${_prompt_slaweq_colors[5]}%~%f "'${git_info:+${(e)git_info[prompt]}}'"$ "
+  RPROMPT='%F{blue}${ruby_info[version]}'
+}
+
+prompt_slaweq_setup "$@"
