@@ -177,7 +177,6 @@ prompt_agnoster_main() {
 ## Right prompt
 rprompt_agnoster_rj() {
   prompt_timestamp
-  echo -n " " # rprompt looks awful without a space at the end
 }
 
 prompt_agnoster_precmd() {
