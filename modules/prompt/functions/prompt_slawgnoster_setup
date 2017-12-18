@@ -187,7 +187,7 @@ prompt_agnoster_main() {
 
 ## Right prompt
 rprompt_agnoster_rj() {
-  prompt_timestamp
+  #prompt_timestamp
 }
 
 prompt_agnoster_precmd() {
